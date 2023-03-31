@@ -1,0 +1,43 @@
+name: docker
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.yml'
+    branches:
+      - 'master'
+      - 'dev'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env to docker dev tag
+        if: endsWith(github.ref, '/dev')
+        run: |
+          echo "DOCKER_TAG=test" >> $GITHUB_ENV
+      - name: Set env to docker latest tag
+        if: endsWith(github.ref, '/master')
+        run: |
+         echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+    
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/djangoblog:${{env.DOCKER_TAG}}
+          
+    

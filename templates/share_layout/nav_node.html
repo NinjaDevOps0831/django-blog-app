@@ -1,0 +1,19 @@
+<li id="menu-item-{{ node.pk }}"
+    class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-{{ node.pk }}">
+    <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+    {% load blog_tags %}
+    {% query nav_category_list parent_category=node as child_categorys %}
+    {% if child_categorys %}
+
+        <ul class="sub-menu">
+            {% for child in child_categorys %}
+                {% with node=child template_name="share_layout/nav_node.html" %}
+                    {% include template_name %}
+                {% endwith %}
+            {% endfor %}
+
+        </ul>
+    {% endif %}
+</li>
+
+

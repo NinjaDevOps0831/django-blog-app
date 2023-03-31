@@ -1,0 +1,73 @@
+{% load blog_tags %}
+{% load cache %}
+<article id="post-{{ article.pk }} "
+         class="post-{{ article.pk }} post type-post status-publish format-standard hentry">
+    <header class="entry-header">
+
+        <h1 class="entry-title">
+            {% if  isindex %}
+                {% if article.article_order > 0 %}
+                    <a href="{{ article.get_absolute_url }}"
+                       rel="bookmark">【置顶】{{ article.title }}</a>
+                {% else %}
+                    <a href="{{ article.get_absolute_url }}"
+                       rel="bookmark">{{ article.title }}</a>
+                {% endif %}
+
+            {% else %}
+                {{ article.title }}
+            {% endif %}
+        </h1>
+        <div class="comments-link">
+            {% if article.comment_status == "o" and open_site_comment %}
+                <a href="{{ article.get_absolute_url }}#comments" class="ds-thread-count" data-thread-key="3815"
+                   rel="nofollow">
+                    <span class="leave-reply">
+                    {% if article.comment_set and article.comment_set.count %}
+                        {{ article.comment_set.count }}个评论
+                    {% else %}
+                        发表评论
+                    {% endif %}
+                    </span>
+                </a>
+            {% endif %}
+            <div style="float:right">
+                {{ article.views }} views
+            </div>
+        </div><!-- .comments-link -->
+        <br/>
+        {% if article.type == 'a' %}
+            {% if not isindex %}
+                {% cache 36000 breadcrumb article.pk %}
+                    {% load_breadcrumb article %}
+                {% endcache %}
+            {% endif %}
+        {% endif %}
+    </header><!-- .entry-header -->
+
+    <div class="entry-content" itemprop="articleBody">
+        {% if  isindex %}
+            {{ article.body|custom_markdown|escape|truncatechars_content }}
+            <p class='read-more'><a
+                    href=' {{ article.get_absolute_url }}'>Read more</a></p>
+        {% else %}
+
+            {% if article.show_toc %}
+                {% get_markdown_toc article.body as toc %}
+                <b>目录:</b>
+                {{ toc|safe }}
+
+                <hr class="break_line"/>
+            {% endif %}
+            <div class="article">
+
+                    {{ article.body|custom_markdown|escape }}
+
+            </div>
+        {% endif %}
+
+    </div><!-- .entry-content -->
+
+    {% load_article_metas article user %}
+
+</article><!-- #post -->

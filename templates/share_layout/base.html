@@ -1,0 +1,95 @@
+{% load static %}
+{% load cache %}
+{% load compress %}
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="zh-CN"
+      prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="zh-CN"
+      prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+<![endif]-->
+<!--[if !(IE 7) & !(IE 8)]><!-->
+<html lang="zh-CN" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    {% block header %}
+    {% endblock %}
+    <link rel="profile" href="http://gmpg.org/xfn/11"/>
+
+    <!--[if lt IE 9]>
+    <script src="{% static 'blog/js/html5.js' %}" type="text/javascript"></script>
+    <![endif]-->
+
+    <link rel="alternate" type="application/rss+xml" title="{{ SITE_NAME }} &raquo; Feed"
+          href="/feed"/>
+    <link rel='stylesheet preload' as="font" id='twentytwelve-fonts-css'
+          href='{% static 'blog/fonts/fonts.css' %}'
+          type='text/css' media='all'/>
+    <link rel="dns-prefetch" href="//cdn.mathjax.org"/>
+    {% compress css %}
+
+        <link rel='stylesheet' id='twentytwelve-style-css' href='{% static 'blog/css/style.css' %}' type='text/css'
+              media='all'/>
+        <link href="{% static 'blog/css/oauth_style.css' %}" rel="stylesheet">
+        {% comment %}<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>{% endcomment %}
+        <!--[if lt IE 9]>
+        <link rel='stylesheet' id='twentytwelve-ie-css'  href='{% static 'blog/css/ie.css' %}' type='text/css' media='all' />
+        <![endif]-->
+        <link rel="stylesheet" href="{% static 'pygments/default.css' %}"/>
+        <link rel="stylesheet" href="{% static 'blog/css/nprogress.css' %}">
+        {% block compress_css %}
+        {% endblock %}
+    {% endcompress %}
+    {% if GLOBAL_HEADER %}
+        {{ GLOBAL_HEADER|safe }}
+    {% endif %}
+</head>
+
+<body class="home blog custom-font-enabled">
+<div id="page" class="hfeed site">
+    <header id="masthead" class="site-header" role="banner">
+        <hgroup>
+            <h1 class="site-title"><a href="/" title="{{ SITE_NAME }}" rel="home">{{ SITE_NAME }}</a>
+            </h1>
+            <h2 class="site-description">{{ SITE_DESCRIPTION }}</h2>
+        </hgroup>
+
+        {% cache 36000 nav %}
+            {% include 'share_layout/nav.html' %}
+        {% endcache %}
+
+    </header><!-- #masthead -->
+    <div id="main" class="wrapper">
+
+        {% block content %}
+        {% endblock %}
+
+
+        {% block sidebar %}
+        {% endblock %}
+
+
+    </div><!-- #main .wrapper -->
+    {% include 'share_layout/footer.html' %}
+</div><!-- #page -->
+
+</body>
+<footer>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    {% compress js %}
+        <script type="text/javascript" src="{% static 'blog/js/jquery-3.6.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'blog/js/nprogress.js' %}"></script>
+        <script src="{% static 'blog/js/blog.js' %}" type="application/javascript"></script>
+        <script src="{% static 'blog/js/navigation.js' %}" type="application/javascript"></script>
+        <script src="{% static 'mathjax/js/mathjax-config.js' %}" type="application/javascript"></script>
+        {% block compress_js %}
+        {% endblock %}
+    {% endcompress %}
+    {% block footer %}
+    {% endblock %}
+</footer>
+</html>

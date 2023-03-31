@@ -1,0 +1,42 @@
+{% extends 'share_layout/base.html' %}
+{% load blog_tags %}
+{% load cache %}
+{% block header %}
+    {% if tag_name %}
+        <title>{{ page_type }}:{{ tag_name }} | {{ SITE_DESCRIPTION }}</title>
+        {% comment %}<meta name="description" content="{{ page_type }}:{{ tag_name }}"/>{% endcomment %}
+    {% else %}
+        <title>{{ SITE_NAME }} | {{ SITE_DESCRIPTION }}</title>
+    {% endif %}
+    <meta name="description" content="{{ SITE_SEO_DESCRIPTION }}"/>
+    <meta name="keywords" content="{{ SITE_KEYWORDS }}"/>
+    <meta property="og:type" content="blog"/>
+    <meta property="og:title" content="{{ SITE_NAME }}"/>
+    <meta property="og:description" content="{{ SITE_DESCRIPTION }}"/>
+    <meta property="og:url" content="{{ SITE_BASE_URL }}"/>
+    <meta property="og:site_name" content="{{ SITE_NAME }}"/>
+{% endblock %}
+{% block content %}
+    <div id="primary" class="site-content">
+        <div id="content" role="main">
+            {% if page_type and tag_name %}
+                <header class="archive-header">
+
+                    <p class="archive-title">{{ page_type }}：<span>{{ tag_name }}</span></p>
+                </header><!-- .archive-header -->
+            {% endif %}
+
+            {% for article in article_list %}
+                {% load_article_detail article True user %}
+            {% endfor %}
+            {% if is_paginated %}
+                {% load_pagination_info page_obj page_type tag_name %}
+
+            {% endif %}
+        </div><!-- #content -->
+    </div><!-- #primary -->
+
+{% endblock %}
+{% block sidebar %}
+    {% load_sidebar user linktype %}
+{% endblock %}

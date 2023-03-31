@@ -1,0 +1,29 @@
+<div id="comments" class="comments-area">
+
+    <div id="respond" class="comment-respond">
+        <h3 id="reply-title" class="comment-reply-title">发表评论
+            <small><a rel="nofollow" id="cancel-comment-reply-link" href="/wordpress/?p=3786#respond"
+                      style="display:none;">取消回复</a></small>
+        </h3>
+        <form action="{% url 'comments:postcomment' article.pk %}" method="post" id="commentform"
+              class="comment-form">{% csrf_token %}
+            <p class="comment-form-comment">
+                {{ form.body.label_tag }}
+
+                {{ form.body }}
+                {{ form.body.errors }}
+            </p>
+            {{ form.parent_comment_id }}
+            <div class="form-submit">
+                <span class="comment-markdown"> 支持markdown</span>
+                <input name="submit" type="submit" id="submit" class="submit" value="发表评论"/>
+                <small class="cancel-comment" id="cancel_comment" style="display: none">
+                    <a href="javascript:void(0)" id="cancel-comment-reply-link" onclick="cancel_reply()">取消回复</a>
+                </small>
+            </div>
+        </form>
+    </div><!-- #respond -->
+
+</div><!-- #comments .comments-area -->
+
+
